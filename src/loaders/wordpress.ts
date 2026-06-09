@@ -67,10 +67,13 @@ export function wordpressLoader({
     name: "wordpress-loader",
     async load({ store, parseData, generateDigest, logger }) {
       const base = endpoint.replace(/\/$/, "");
-      const url = `${base}/wp-json/wp/v2/posts?_embed&per_page=100`;
+      // Cache-buster: το REST endpoint συχνά περνά από server-side cache (π.χ. nginx,
+      // X-Cache-Status). Με μοναδικό param κάθε build τραβάει ΦΡΕΣΚΑ δεδομένα (cache MISS),
+      // ώστε μια μόλις-δημοσιευμένη αλλαγή να μην χαθεί λόγω stale cache.
+      const url = `${base}/wp-json/wp/v2/posts?_embed&per_page=100&_cb=${Date.now()}`;
       logger.info(`Fetching posts from ${url}`);
 
-      const res = await fetch(url);
+      const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) {
         throw new Error(`WordPress fetch failed: ${res.status} ${res.statusText}`);
       }
