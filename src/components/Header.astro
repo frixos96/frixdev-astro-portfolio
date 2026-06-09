@@ -1,0 +1,123 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+import Logo from "./Logo.astro";
+
+const links = [
+  { href: "/#about", label: "About" },
+  { href: "/#projects", label: "Projects" },
+  { href: "/#testimonials", label: "Testimonials" },
+  { href: "/blog", label: "Blog" },
+  { href: "/#contact", label: "Contact" },
+];
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-slate-200/60 bg-white/80 backdrop-blur-md dark:border-slate-800/60 dark:bg-slate-950/80"
+>
+  <nav class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+    <Logo />
+
+    <div class="flex items-center gap-1 sm:gap-2">
+      <!-- Desktop nav -->
+      <ul class="hidden items-center gap-1 sm:flex">
+        {
+          links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                class="rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <ThemeToggle />
+
+      <!-- Mobile hamburger -->
+      <button
+        id="menu-toggle"
+        type="button"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition hover:bg-slate-100 sm:hidden dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+      >
+        <svg
+          id="menu-icon-open"
+          class="h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.8"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+        </svg>
+        <svg
+          id="menu-icon-close"
+          class="hidden h-5 w-5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.8"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile menu panel -->
+  <div
+    id="mobile-menu"
+    class="hidden border-t border-slate-200/60 bg-white/95 backdrop-blur-md sm:hidden dark:border-slate-800/60 dark:bg-slate-950/95"
+  >
+    <ul class="mx-auto flex max-w-5xl flex-col gap-1 px-6 py-4">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="block rounded-lg px-4 py-3 text-base font-medium text-slate-700 transition hover:bg-slate-100 hover:text-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 dark:hover:text-white"
+            >
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("mobile-menu");
+  const iconOpen = document.getElementById("menu-icon-open");
+  const iconClose = document.getElementById("menu-icon-close");
+
+  function setOpen(open: boolean) {
+    if (!menu || !toggle) return;
+    menu.classList.toggle("hidden", !open);
+    iconOpen?.classList.toggle("hidden", open);
+    iconClose?.classList.toggle("hidden", !open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+  }
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = toggle.getAttribute("aria-expanded") === "true";
+    setOpen(!isOpen);
+  });
+
+  // Close the menu when a link is clicked
+  menu?.querySelectorAll("a").forEach((a) =>
+    a.addEventListener("click", () => setOpen(false))
+  );
+
+  // Close when resizing up to desktop
+  window.matchMedia("(min-width: 640px)").addEventListener("change", (e) => {
+    if (e.matches) setOpen(false);
+  });
+</script>

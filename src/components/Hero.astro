@@ -1,0 +1,185 @@
+---
+import { site, roles, stats } from "../data/portfolio";
+import HeroOrbit from "./HeroOrbit.astro";
+---
+
+<section
+  id="top"
+  class="relative isolate overflow-hidden"
+>
+  <!-- Animated gradient blobs (decorative; hidden on mobile — the large
+       blur is costly to paint on throttled phones and hurts LCP) -->
+  <div
+    class="pointer-events-none absolute inset-0 -z-10 hidden overflow-hidden sm:block"
+    aria-hidden="true"
+  >
+    <div
+      class="absolute -left-24 top-0 h-72 w-72 rounded-full bg-brand-400/30 blur-3xl animate-blob dark:bg-brand-600/20"
+    >
+    </div>
+    <div
+      class="absolute right-0 top-20 h-80 w-80 rounded-full bg-accent-400/30 blur-3xl animate-blob [animation-delay:4s] dark:bg-accent-600/20"
+    >
+    </div>
+    <div
+      class="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-brand-300/30 blur-3xl animate-blob [animation-delay:8s] dark:bg-brand-700/20"
+    >
+    </div>
+  </div>
+
+  <div
+    class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 py-28 sm:py-36 lg:grid-cols-[1.15fr_1fr]"
+  >
+   <div class="flex flex-col items-start gap-6">
+    <p
+      class="reveal inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/60 px-4 py-1.5 font-mono text-sm font-medium text-brand-600 backdrop-blur dark:border-slate-700 dark:bg-slate-900/60 dark:text-brand-400"
+    >
+      <span class="relative flex h-2 w-2">
+        <span
+          class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
+        ></span>
+        <span class="relative inline-flex h-2 w-2 rounded-full bg-green-500"></span>
+      </span>
+      Available for work
+    </p>
+
+    <h1
+      class="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-7xl dark:text-white"
+    >
+      Hi, I'm <span class="text-gradient">{site.name}</span>.
+    </h1>
+
+    <h2
+      class="reveal flex min-h-[1.2em] items-center text-3xl font-bold tracking-tight text-slate-500 sm:text-5xl dark:text-slate-400"
+      style="--reveal-delay:160ms"
+      aria-label={site.role}
+    >
+      <span id="typed-role">{roles[0]}</span><span
+        class="type-cursor ml-0.5 font-normal text-brand-500"
+        aria-hidden="true">|</span
+      >
+    </h2>
+
+    <p
+      class="reveal max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-400"
+      style="--reveal-delay:240ms"
+    >
+      {site.tagline}
+    </p>
+
+    <div
+      class="reveal mt-4 flex flex-wrap items-center gap-4"
+      style="--reveal-delay:320ms"
+    >
+      <a
+        href="#projects"
+        class="group relative inline-flex items-center gap-2 overflow-hidden rounded-lg bg-brand-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand-600/25 transition hover:bg-brand-700 hover:shadow-brand-600/40"
+      >
+        View my work
+        <svg
+          class="h-4 w-4 transition-transform group-hover:translate-x-1"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+        </svg>
+      </a>
+      <a
+        href="#contact"
+        class="rounded-lg border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700 transition hover:-translate-y-0.5 hover:border-brand-400 hover:text-brand-600 dark:border-slate-700 dark:text-slate-200 dark:hover:border-brand-500 dark:hover:text-brand-400"
+      >
+        Get in touch
+      </a>
+    </div>
+
+    <!-- Headline stats -->
+    <dl
+      class="reveal mt-14 grid w-full max-w-2xl grid-cols-2 gap-x-8 gap-y-8 border-t border-slate-200 pt-10 sm:grid-cols-4 dark:border-slate-800"
+      style="--reveal-delay:400ms"
+    >
+      {
+        stats.map((stat) => (
+          <div class="flex flex-col">
+            <dd class="order-1 text-3xl font-extrabold tracking-tight sm:text-4xl">
+              <span class="stat-num text-gradient" data-target={stat.value}>
+                {stat.value}
+              </span>
+              {stat.suffix && <span class="text-gradient">{stat.suffix}</span>}
+            </dd>
+            <dt class="order-2 mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {stat.label}
+            </dt>
+          </div>
+        ))
+      }
+    </dl>
+   </div>
+
+    <!-- Orbiting tech logos (hidden on small screens to keep them clean) -->
+    <div class="reveal hidden justify-center lg:flex" style="--reveal-delay:480ms">
+      <HeroOrbit />
+    </div>
+  </div>
+</section>
+
+<!-- Typing effect: cycle through the roles -->
+<script define:vars={{ roles }}>
+  const el = document.getElementById("typed-role");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (el && !reduce && roles.length > 1) {
+    let r = 0;
+    let i = roles[0].length; // start fully typed (matches server-rendered text)
+    let deleting = true; // ...then delete it first and cycle to the next role
+    const tick = () => {
+      const word = roles[r];
+      i += deleting ? -1 : 1;
+      el.textContent = word.slice(0, i);
+      let delay = deleting ? 45 : 95;
+      if (!deleting && i === word.length) {
+        delay = 1700;
+        deleting = true;
+      } else if (deleting && i === 0) {
+        deleting = false;
+        r = (r + 1) % roles.length;
+        delay = 350;
+      }
+      setTimeout(tick, delay);
+    };
+    setTimeout(tick, 1700);
+  }
+</script>
+
+<!-- Count-up: animate each stat from 0 when it scrolls into view -->
+<script>
+  const nums = document.querySelectorAll<HTMLElement>(".stat-num");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (nums.length && !reduce && "IntersectionObserver" in window) {
+    const run = (el: HTMLElement) => {
+      const target = Number(el.dataset.target ?? el.textContent ?? 0);
+      const start = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min((now - start) / 1400, 1);
+        const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+        el.textContent = String(Math.round(eased * target));
+        if (p < 1) requestAnimationFrame(tick);
+        else el.textContent = String(target);
+      };
+      el.textContent = "0";
+      requestAnimationFrame(tick);
+    };
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            run(entry.target as HTMLElement);
+            io.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.6 }
+    );
+    nums.forEach((n) => io.observe(n));
+  }
+</script>

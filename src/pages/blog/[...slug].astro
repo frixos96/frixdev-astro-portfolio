@@ -1,0 +1,73 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/Header.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <Header />
+  <main class="mx-auto max-w-2xl px-6 py-20">
+    <a
+      href="/blog"
+      class="inline-flex items-center gap-2 text-sm font-medium text-brand-600 transition hover:underline dark:text-brand-400"
+    >
+      ← All posts
+    </a>
+
+    <article class="reveal mt-8">
+      <div class="flex flex-wrap items-center gap-3 text-sm text-slate-500 dark:text-slate-400">
+        <time class="font-mono">{fmt(post.data.pubDate)}</time>
+        {post.data.author && (
+          <span class="text-slate-400 dark:text-slate-500">· by {post.data.author}</span>
+        )}
+        {
+          post.data.tags.map((tag) => (
+            <span class="rounded-md bg-brand-50 px-2 py-0.5 font-mono text-xs text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+              #{tag}
+            </span>
+          ))
+        }
+      </div>
+
+      <h1
+        class="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white"
+      >
+        {post.data.title}
+      </h1>
+
+      {
+        post.data.heroImage && (
+          <img
+            src={post.data.heroImage}
+            alt={post.data.heroImageAlt ?? post.data.title}
+            class="mt-8 aspect-video w-full rounded-2xl object-cover ring-1 ring-slate-200 dark:ring-slate-800"
+          />
+        )
+      }
+
+      <div
+        class="prose prose-slate mt-10 max-w-none prose-headings:font-bold prose-headings:tracking-tight prose-a:text-brand-600 prose-code:rounded prose-code:bg-slate-100 prose-code:px-1.5 prose-code:py-0.5 prose-code:font-mono prose-code:text-sm prose-code:before:content-[''] prose-code:after:content-[''] prose-pre:rounded-xl prose-pre:bg-slate-900 dark:prose-invert dark:prose-a:text-brand-400 dark:prose-code:bg-slate-800"
+      >
+        <Content />
+      </div>
+    </article>
+  </main>
+</Layout>

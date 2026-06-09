@@ -1,0 +1,209 @@
+---
+// The handle typed out on hover, terminal-style. Edit freely — just keep
+// the steps() count in the <style> below equal to its length.
+const handle = "frix_dev";
+---
+
+<a href="/" class="logo group" aria-label="Home">
+  <span class="logo-mono">
+    <span class="logo-avatar" aria-hidden="true">
+      <svg
+        viewBox="0 0 32 32"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <!-- hood -->
+        <path d="M8.5 17C8.5 9 11.5 4.5 16 4.5S23.5 9 23.5 17" />
+        <!-- shoulders -->
+        <path d="M8.5 17C7 18.5 6 20.5 6 23.5" />
+        <path d="M23.5 17C25 18.5 26 20.5 26 23.5" />
+        <!-- face shadow -->
+        <path
+          d="M11.5 15C11.5 11.5 13.5 9.5 16 9.5S20.5 11.5 20.5 15C20.5 17 18.5 18.5 16 18.5S11.5 17 11.5 15Z"
+          fill="rgba(34,211,238,0.10)"
+          stroke="none"
+        />
+        <!-- focused eyes, looking down at the screen -->
+        <path d="M13.5 14.4c.5.6 1.2.6 1.7 0" />
+        <path d="M16.8 14.4c.5.6 1.2.6 1.7 0" />
+        <!-- laptop in front, occluding the lower body -->
+        <rect x="8" y="21" width="16" height="7.5" rx="1.4" fill="#0b1220" />
+        <!-- lines of code on the lid -->
+        <path
+          d="M11.5 24h2.5M11.5 26h6M15.5 24h4"
+          stroke-width="1.1"
+          opacity="0.85"
+        />
+      </svg>
+    </span><span class="logo-prompt">&gt;</span><span
+      class="logo-text"
+      style={`--len:${handle.length}`}>{handle}</span><span
+      class="logo-cursor"
+      aria-hidden="true"></span>
+  </span>
+</a>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    height: 2.25rem; /* 36px — matches the theme toggle / hamburger */
+    padding-inline: 0.55rem;
+    border-radius: 0.6rem;
+    background: #0b1220; /* deep terminal navy, in both themes */
+    border: 1px solid rgb(51 65 85 / 0.8);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.05);
+    transition:
+      transform 0.2s,
+      box-shadow 0.25s,
+      border-color 0.25s;
+  }
+  .logo:hover,
+  .logo:focus-visible {
+    transform: translateY(-1px);
+    border-color: var(--color-brand-500);
+    box-shadow: 0 8px 22px -10px rgb(27 92 245 / 0.65);
+    outline: none;
+  }
+
+  .logo-mono {
+    display: inline-flex;
+    align-items: center;
+    font-family: ui-monospace, "SFMono-Regular", "Menlo", monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  /* Hooded coder: hidden by default, slides in on hover. */
+  .logo-avatar {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    max-width: 0;
+    opacity: 0;
+    color: #22d3ee;
+    transition:
+      max-width 0.45s ease,
+      opacity 0.3s ease,
+      margin-right 0.45s ease;
+  }
+  .logo-avatar svg {
+    width: 1.65rem;
+    height: 1.65rem;
+    flex: none;
+  }
+  .logo:hover .logo-avatar,
+  .logo:focus-visible .logo-avatar {
+    max-width: 1.8rem;
+    opacity: 1;
+    margin-right: 0.3rem;
+  }
+
+  .logo-prompt {
+    color: #22d3ee; /* terminal cyan */
+  }
+
+  /* Typed text: hidden by default, revealed char-by-char on hover. */
+  .logo-text {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 0;
+    color: #e2e8f0;
+    /* steps() should equal the number of characters in `handle` above. */
+    transition:
+      max-width 0.55s steps(8, end),
+      margin-left 0.55s;
+  }
+  .logo:hover .logo-text,
+  .logo:focus-visible .logo-text {
+    max-width: calc(var(--len, 2) * 1ch);
+    margin-left: 0.12rem;
+  }
+
+  /* Blinking block cursor. */
+  .logo-cursor {
+    width: 0.55ch;
+    height: 1em;
+    margin-left: 2px;
+    background: #22d3ee;
+    animation: logo-blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes logo-blink {
+    0%,
+    50% {
+      opacity: 1;
+    }
+    50.01%,
+    100% {
+      opacity: 0;
+    }
+  }
+
+  /* Mobile has no hover, so cycle the reveal automatically on a loop. */
+  @keyframes logo-auto-type {
+    0% {
+      max-width: 0;
+      margin-left: 0;
+      animation-timing-function: steps(8, end);
+    }
+    18% {
+      max-width: calc(var(--len, 2) * 1ch);
+      margin-left: 0.12rem;
+    }
+    55% {
+      max-width: calc(var(--len, 2) * 1ch);
+      margin-left: 0.12rem;
+      animation-timing-function: steps(8, end);
+    }
+    73%,
+    100% {
+      max-width: 0;
+      margin-left: 0;
+    }
+  }
+
+  @keyframes logo-auto-avatar {
+    0% {
+      max-width: 0;
+      opacity: 0;
+      margin-right: 0;
+    }
+    18%,
+    55% {
+      max-width: 1.8rem;
+      opacity: 1;
+      margin-right: 0.3rem;
+    }
+    73%,
+    100% {
+      max-width: 0;
+      opacity: 0;
+      margin-right: 0;
+    }
+  }
+
+  @media (max-width: 639px) {
+    .logo-text {
+      animation: logo-auto-type 5s ease-in-out infinite;
+    }
+    .logo-avatar {
+      animation: logo-auto-avatar 5s ease-in-out infinite;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .logo-cursor {
+      animation: none;
+    }
+    .logo-text,
+    .logo-avatar {
+      transition: none;
+    }
+  }
+</style>

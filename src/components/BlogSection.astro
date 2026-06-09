@@ -1,0 +1,54 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+---
+
+<section id="blog" class="mx-auto max-w-5xl px-6 py-20">
+  <div class="reveal flex items-center gap-4">
+    <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl dark:text-white">
+      <span class="font-mono text-brand-500">04.</span> Blog
+    </h2>
+    <span class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></span>
+    <a
+      href="/blog"
+      class="shrink-0 text-sm font-medium text-brand-600 transition hover:underline dark:text-brand-400"
+    >
+      View all →
+    </a>
+  </div>
+
+  <div class="mt-10 grid gap-6 sm:grid-cols-3">
+    {
+      posts.map((post, i) => (
+        <a
+          href={`/blog/${post.id}/`}
+          class="reveal group flex flex-col rounded-2xl border border-slate-200 bg-white p-6 transition duration-300 hover:-translate-y-1.5 hover:border-brand-300 hover:shadow-xl hover:shadow-brand-500/10 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-brand-700"
+          style={`--reveal-delay:${i * 100}ms`}
+        >
+          <time class="font-mono text-xs text-slate-500 dark:text-slate-400">
+            {fmt(post.data.pubDate)}
+          </time>
+          <h3 class="mt-2 font-semibold text-slate-900 transition group-hover:text-brand-600 dark:text-white dark:group-hover:text-brand-400">
+            {post.data.title}
+          </h3>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+            {post.data.description}
+          </p>
+          <span class="mt-4 text-sm font-medium text-brand-600 dark:text-brand-400">
+            Read more →
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</section>

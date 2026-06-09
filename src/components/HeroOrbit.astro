@@ -1,0 +1,228 @@
+---
+import { Icon } from "astro-icon/components";
+import { techStack } from "../data/portfolio";
+
+// Initials for the centre monogram, derived from the name in your data file.
+import { site } from "../data/portfolio";
+const initials = site.name
+  .split(" ")
+  .map((w) => w[0])
+  .slice(0, 2)
+  .join("")
+  .toUpperCase();
+
+// Pick a curated subset of your stack for each ring (keeps it uncluttered).
+const byName = (n: string) => techStack.find((t) => t.name === n);
+const outer = [
+  "WordPress",
+  "PHP",
+  "MySQL",
+  "Docker",
+  "Linux",
+  "Astro",
+]
+  .map(byName)
+  .filter(Boolean) as typeof techStack;
+const inner = ["JavaScript", "React", "Git", "Nginx"]
+  .map(byName)
+  .filter(Boolean) as typeof techStack;
+---
+
+<div class="orbit" aria-hidden="true">
+  <!-- soft glow behind everything -->
+  <div class="orbit-glow"></div>
+
+  <!-- Outer ring -->
+  <div class="ring ring-outer">
+    <span class="ring-track"></span>
+    {
+      outer.map((tech, i) => (
+        <span
+          class="dot"
+          style={`--i:${i}; --n:${outer.length}; --r:calc(var(--size) / 2 - 22px)`}
+        >
+          <span class="badge badge-out">
+            <Icon
+              name={tech.icon}
+              class="h-7 w-7"
+              style={tech.color ? `color:${tech.color}` : undefined}
+            />
+          </span>
+        </span>
+      ))
+    }
+  </div>
+
+  <!-- Inner ring (spins the other way) -->
+  <div class="ring ring-inner">
+    <span class="ring-track"></span>
+    {
+      inner.map((tech, i) => (
+        <span
+          class="dot"
+          style={`--i:${i}; --n:${inner.length}; --r:calc(var(--size) / 3.4)`}
+        >
+          <span class="badge badge-in">
+            <Icon
+              name={tech.icon}
+              class="h-6 w-6"
+              style={tech.color ? `color:${tech.color}` : undefined}
+            />
+          </span>
+        </span>
+      ))
+    }
+  </div>
+
+  <!-- Centre monogram -->
+  <div class="core">
+    <span class="core-text text-gradient">{initials}</span>
+  </div>
+</div>
+
+<style>
+  .orbit {
+    --size: clamp(280px, 30vw, 400px);
+    position: relative;
+    width: var(--size);
+    height: var(--size);
+    display: grid;
+    place-items: center;
+  }
+
+  .orbit-glow {
+    position: absolute;
+    inset: 12%;
+    border-radius: 9999px;
+    background: radial-gradient(
+      circle at center,
+      rgb(51 125 255 / 0.22),
+      transparent 70%
+    );
+    filter: blur(28px);
+  }
+
+  /* A ring carries its dots and rotates as a whole. */
+  .ring {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+  .ring-outer {
+    --size: clamp(280px, 30vw, 400px);
+    animation: orbit-spin 34s linear infinite;
+  }
+  .ring-inner {
+    --size: clamp(280px, 30vw, 400px);
+    animation: orbit-spin 26s linear infinite reverse;
+  }
+
+  /* The faint dashed circle of each orbit. */
+  .ring-track {
+    position: absolute;
+    border-radius: 9999px;
+    border: 1px dashed rgb(148 163 184 / 0.35);
+  }
+  .ring-outer .ring-track {
+    width: calc(var(--size) - 44px);
+    height: calc(var(--size) - 44px);
+  }
+  .ring-inner .ring-track {
+    width: calc(var(--size) / 1.7);
+    height: calc(var(--size) / 1.7);
+  }
+  :global(.dark) .ring-track {
+    border-color: rgb(71 85 105 / 0.45);
+  }
+
+  /* Each dot is placed on its circle with trigonometry. */
+  .dot {
+    position: absolute;
+    --angle: calc(360deg / var(--n) * var(--i));
+    transform: translate(
+      calc(var(--r) * cos(var(--angle))),
+      calc(var(--r) * sin(var(--angle)))
+    );
+  }
+
+  /* The badge counter-rotates so the logo always stays upright. */
+  .badge {
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    border: 1px solid rgb(226 232 240 / 0.9);
+    background: rgb(255 255 255 / 0.85);
+    box-shadow: 0 6px 18px -8px rgb(27 92 245 / 0.35);
+    backdrop-filter: blur(6px);
+  }
+  .badge-out {
+    width: 3rem;
+    height: 3rem;
+  }
+  .badge-in {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+  :global(.dark) .badge {
+    border-color: rgb(51 65 85 / 0.9);
+    background: rgb(15 23 42 / 0.85);
+  }
+  .ring-outer .badge {
+    animation: orbit-spin 34s linear infinite reverse;
+  }
+  .ring-inner .badge {
+    animation: orbit-spin 26s linear infinite;
+  }
+
+  /* Centre monogram tile. */
+  .core {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: clamp(76px, 8vw, 104px);
+    height: clamp(76px, 8vw, 104px);
+    border-radius: 22px;
+    border: 1px solid rgb(226 232 240 / 0.9);
+    background: rgb(255 255 255 / 0.9);
+    box-shadow:
+      0 0 0 6px rgb(27 92 245 / 0.06),
+      0 18px 40px -14px rgb(27 92 245 / 0.5);
+    backdrop-filter: blur(8px);
+    animation: orbit-float 6s ease-in-out infinite;
+  }
+  :global(.dark) .core {
+    border-color: rgb(51 65 85 / 0.9);
+    background: rgb(15 23 42 / 0.9);
+  }
+  .core-text {
+    font-weight: 800;
+    font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+    letter-spacing: -0.02em;
+  }
+
+  @keyframes orbit-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes orbit-float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  /* The dot's static position must survive the reduced-motion reset. */
+  @media (prefers-reduced-motion: reduce) {
+    .ring,
+    .badge,
+    .core {
+      animation: none !important;
+    }
+  }
+</style>
