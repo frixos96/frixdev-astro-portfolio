@@ -36,6 +36,17 @@ export const stats: Stat[] = [
 ];
 
 export const about = {
+  // 👉 Drop your photo in public/about/ and set the path here
+  // (e.g. "/about/frixos.jpg"). Leave "" to show a styled initials placeholder.
+  photo: "",
+  photoAlt: "Frixos Nikoloulopoulos",
+  // Quick-facts card shown beside the bio on desktop.
+  facts: [
+    { label: "Education", value: "Electrical & Computer Eng. — NTUA" },
+    { label: "Based in", value: "Greece & Cyprus" },
+    { label: "Languages", value: "Greek · English" },
+    { label: "Focus", value: "Development · SEO · DevOps" },
+  ],
   paragraphs: [
     "I'm an Electrical & Computer Engineering graduate of the National Technical University of Athens (NTUA). I came to the web the practical way — by building real things. It started about ten years ago with inaek.com, a Greek news site I launched and still run, and grew from there into a career across development, SEO, and digital marketing.",
     "Since then I've taken projects from idea to traffic: Aigio Padel Club, now booked solid with the whole town playing and new courts on the way; the marketing of a family-run medical-equipment company that has led the Cypriot market for decades; and dozens of sites where I own the full chain — from server configuration to Core Web Vitals to search rankings.",
@@ -83,6 +94,10 @@ export const skillCategories: SkillCategory[] = [
     ],
   },
   {
+    title: "APIs & Headless",
+    skills: ["REST APIs", "GraphQL", "Headless CMS", "Webhooks"],
+  },
+  {
     title: "Web Fundamentals",
     skills: ["JavaScript", "HTML & CSS", "Git"],
   },
@@ -107,6 +122,7 @@ export const techStack: Tech[] = [
   { name: "Docker", icon: "logos:docker-icon" },
   { name: "Git", icon: "logos:git-icon" },
   { name: "React", icon: "logos:react" },
+  { name: "GraphQL", icon: "logos:graphql" },
   { name: "Astro", icon: "logos:astro-icon" },
 ];
 
