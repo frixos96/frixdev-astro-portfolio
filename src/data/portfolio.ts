@@ -29,7 +29,7 @@ export const roles = [
 // 👉 Replace these with your real figures.
 export type Stat = { value: number; suffix?: string; label: string };
 export const stats: Stat[] = [
-  { value: 8, suffix: "+", label: "Years experience" },
+  { value: 10, suffix: "+", label: "Years experience" },
   { value: 60, suffix: "+", label: "Sites delivered" },
   { value: 100, label: "Best PageSpeed score" },
   { value: 100, suffix: "%", label: "Uptime focus" },
@@ -37,8 +37,9 @@ export const stats: Stat[] = [
 
 export const about = {
   paragraphs: [
-    "I'm a developer who loves turning ideas into polished products. I focus on the web platform — from pixel-perfect UIs to robust APIs.",
-    "When I'm not coding, I enjoy contributing to open source, learning new tools, and writing about what I build.",
+    "I'm an Electrical & Computer Engineering graduate of the National Technical University of Athens (NTUA). I came to the web the practical way — by building real things. It started about ten years ago with inaek.com, a Greek news site I launched and still run, and grew from there into a career across development, SEO, and digital marketing.",
+    "Since then I've taken projects from idea to traffic: Aigio Padel Club, now booked solid with the whole town playing and new courts on the way; the marketing of a family business; and dozens of sites where I own the full chain — from server configuration to Core Web Vitals to search rankings.",
+    "Today I work as a Tech Project Owner at a Cyprus-based digital marketing agency, sitting between business and engineering and turning strategy into fast, well-ranked products that ship. I work in Greek and English, across Greece and Cyprus.",
   ],
 };
 
